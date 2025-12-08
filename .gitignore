@@ -1,0 +1,31 @@
+# macOS / OS files
+.DS_Store
+
+# Python cache/artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.venv/
+venv/
+ENV/
+env/
+
+# Node.js dependencies/logs
+node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build/output
+build/
+dist/
+html/output/
+
+# Tool/cache outputs
+.cache/
+
+# Environment/credentials
+.env
+.env.local
+.env.*
