@@ -10,6 +10,9 @@ jobs:
       contents: read
       pull-requests: write
       issues: write
+    env:
+      # GitHub 默认提供的 token，用于读取 PR 和发表评论
+      GITHUB_TOKEN: ${{ github.token }}
 
     steps:
       - name: Checkout
@@ -27,5 +30,6 @@ jobs:
         env:
           GPTSAPI_KEY: ${{ secrets.GPTSAPI_KEY }}
           GPTSAPI_BASE_URL: ${{ secrets.GPTSAPI_BASE_URL }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # 优先使用自定义 secrets，缺省则退回 github.token
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN || github.token }}
         run: node scripts/analyze_pr.js
