@@ -27,4 +27,5 @@ jobs:
         env:
           GPTSAPI_KEY: ${{ secrets.GPTSAPI_KEY }}
           GPTSAPI_BASE_URL: ${{ secrets.GPTSAPI_BASE_URL }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/analyze_pr.js
