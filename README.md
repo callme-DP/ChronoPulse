@@ -34,3 +34,9 @@
    ```bash
    speckit.analyze
    ```
+
+### 如何触发五步流程（给 Codex 的指令）
+- 启动语句示例：`开始 Feature F123：<一句话目标>`。  
+- 我将按顺序引导：Specify → Clarify → Plan（生成 spec/plan/tasks 等文档）→ Implement → Analyze。  
+- 每一步都会暂停等待你确认/补充，再进入下一步。  
+- 产物落位：`specs/<feature>/` 目录下的 `spec.md`/`plan.md`/`tasks.md` 等，并回填到 README/宪章约定。
