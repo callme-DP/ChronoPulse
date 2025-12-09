@@ -1,10 +1,20 @@
 /* eslint-disable no-console */
 const axios = require("axios");
 
-const { OPENAI_API_KEY, GITHUB_TOKEN, GITHUB_REPOSITORY, GITHUB_REF } = process.env;
+const {
+  GPTSAPI_KEY,
+  GPTSAPI_BASE_URL,
+  OPENAI_API_KEY,
+  GITHUB_TOKEN,
+  GITHUB_REPOSITORY,
+  GITHUB_REF,
+} = process.env;
 
-if (!OPENAI_API_KEY) {
-  console.error("❌ 环境变量 OPENAI_API_KEY 未设置");
+const API_KEY = GPTSAPI_KEY || OPENAI_API_KEY;
+const BASE_URL = GPTSAPI_BASE_URL || "https://api.gptsapi.net/v1";
+
+if (!API_KEY) {
+  console.error("❌ 环境变量 GPTSAPI_KEY/OPENAI_API_KEY 未设置");
   process.exit(1);
 }
 if (!GITHUB_TOKEN) {
@@ -69,14 +79,14 @@ ${diff.substring(0, 15000)}
 `;
 
   const response = await axios.post(
-    "https://api.openai.com/v1/chat/completions",
+    `${BASE_URL}/chat/completions`,
     {
       model: "gpt-4.1",
       messages: [{ role: "user", content: prompt }],
       temperature: 0.2,
     },
     {
-      headers: { Authorization: `Bearer ${OPENAI_API_KEY}` },
+      headers: { Authorization: `Bearer ${API_KEY}` },
     }
   );
 
@@ -87,11 +97,12 @@ ${diff.substring(0, 15000)}
 // 发布评论
 // ---------------------
 async function postComment(body) {
-  await axios.post(
+  const res = await axios.post(
     `https://api.github.com/repos/${repo}/issues/${prNumber}/comments`,
     { body },
     { headers: { Authorization: `token ${GITHUB_TOKEN}` } }
   );
+  console.log(`📝 评论状态: ${res.status}`);
 }
 
 // ---------------------
@@ -100,6 +111,7 @@ async function postComment(body) {
 async function main() {
   console.log("🚀 正在获取 PR diff...");
   const diff = await getPRDiff();
+  console.log(`📌 repo=${repo}, pr=${prNumber}, diffLength=${diff.length}`);
 
   console.log("🚀 正在调用 OpenAI 审查代码...");
   const review = await aiReview(diff);
