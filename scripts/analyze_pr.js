@@ -87,11 +87,12 @@ ${diff.substring(0, 15000)}
 // 发布评论
 // ---------------------
 async function postComment(body) {
-  await axios.post(
+  const res = await axios.post(
     `https://api.github.com/repos/${repo}/issues/${prNumber}/comments`,
     { body },
     { headers: { Authorization: `token ${GITHUB_TOKEN}` } }
   );
+  console.log(`📝 评论状态: ${res.status}`);
 }
 
 // ---------------------
@@ -100,6 +101,7 @@ async function postComment(body) {
 async function main() {
   console.log("🚀 正在获取 PR diff...");
   const diff = await getPRDiff();
+  console.log(`📌 repo=${repo}, pr=${prNumber}, diffLength=${diff.length}`);
 
   console.log("🚀 正在调用 OpenAI 审查代码...");
   const review = await aiReview(diff);
