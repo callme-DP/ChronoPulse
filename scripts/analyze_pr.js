@@ -1,10 +1,20 @@
 /* eslint-disable no-console */
 const axios = require("axios");
 
-const { OPENAI_API_KEY, GITHUB_TOKEN, GITHUB_REPOSITORY, GITHUB_REF } = process.env;
+const {
+  GPTSAPI_KEY,
+  GPTSAPI_BASE_URL,
+  OPENAI_API_KEY,
+  GITHUB_TOKEN,
+  GITHUB_REPOSITORY,
+  GITHUB_REF,
+} = process.env;
 
-if (!OPENAI_API_KEY) {
-  console.error("❌ 环境变量 OPENAI_API_KEY 未设置");
+const API_KEY = GPTSAPI_KEY || OPENAI_API_KEY;
+const BASE_URL = GPTSAPI_BASE_URL || "https://api.gptsapi.net/v1";
+
+if (!API_KEY) {
+  console.error("❌ 环境变量 GPTSAPI_KEY/OPENAI_API_KEY 未设置");
   process.exit(1);
 }
 if (!GITHUB_TOKEN) {
@@ -69,14 +79,14 @@ ${diff.substring(0, 15000)}
 `;
 
   const response = await axios.post(
-    "https://api.openai.com/v1/chat/completions",
+    `${BASE_URL}/chat/completions`,
     {
       model: "gpt-4.1",
       messages: [{ role: "user", content: prompt }],
       temperature: 0.2,
     },
     {
-      headers: { Authorization: `Bearer ${OPENAI_API_KEY}` },
+      headers: { Authorization: `Bearer ${API_KEY}` },
     }
   );
 
