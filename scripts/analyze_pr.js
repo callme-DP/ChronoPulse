@@ -119,4 +119,10 @@ ${review}
 
 main().catch(err => {
   console.error("❌ 执行失败：", err.message);
+  if (err.response) {
+    console.error(
+      `响应状态: ${err.response.status}; 响应体: ${JSON.stringify(err.response.data)}`
+    );
+  }
+  process.exit(1);
 });
