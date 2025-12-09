@@ -1,12 +1,23 @@
-import axios from "axios";
-import simpleGit from "simple-git";
+/* eslint-disable no-console */
+const axios = require("axios");
 
-const git = simpleGit();
+const { OPENAI_API_KEY, GITHUB_TOKEN, GITHUB_REPOSITORY, GITHUB_REF } = process.env;
 
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-const repo = process.env.GITHUB_REPOSITORY;
-const prNumber = process.env.GITHUB_REF.split("/")[2];
+if (!OPENAI_API_KEY) {
+  console.error("❌ 环境变量 OPENAI_API_KEY 未设置");
+  process.exit(1);
+}
+if (!GITHUB_TOKEN) {
+  console.error("❌ 环境变量 GITHUB_TOKEN 未设置");
+  process.exit(1);
+}
+if (!GITHUB_REPOSITORY || !GITHUB_REF) {
+  console.error("❌ 缺少 GITHUB_REPOSITORY 或 GITHUB_REF 环境变量");
+  process.exit(1);
+}
+
+const repo = GITHUB_REPOSITORY;
+const prNumber = GITHUB_REF.split("/")[2];
 
 // ---------------------
 // 获取 PR diff
@@ -52,7 +63,7 @@ async function aiReview(diff) {
 ## 5. 最终审查结论
 （Approve / Request changes）
 
-以下是 diff：
+以下是 diff（截断至 15k 字符）：
 
 ${diff.substring(0, 15000)}
 `;
