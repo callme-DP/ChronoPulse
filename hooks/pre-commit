@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -e
+
+if ! command -v npx >/dev/null 2>&1; then
+  echo "[pre-commit] npx 未找到，请先安装 Node/npm 后再提交。" >&2
+  exit 1
+fi
+
+echo "[pre-commit] 运行 markdownlint-cli2..."
+npx markdownlint-cli2 "**/*.md"

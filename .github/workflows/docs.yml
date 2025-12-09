@@ -1,37 +1,37 @@
-# Build and deploy DocFX documentation to GitHub Pages
+# 构建并部署 DocFX 文档到 GitHub Pages
 name: Deploy Documentation to Pages
 
 on:
-  # Runs on pushes targeting the default branch
+  # 暂停自动触发，保留手动触发入口
   push:
     branches: ["main"]
     paths:
       - 'docs/**'
 
-  # Allows you to run this workflow manually from the Actions tab
+  # 可在 Actions 里手动运行
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+# 设置 GITHUB_TOKEN 权限以允许部署到 Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+#只允许一个并发部署，跳过正在运行和最新队列之间的运行队列。
+#但是，不要取消正在进行的运行，因为我们希望这些生产部署能够完成。
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 jobs:
-  # Build job
+  # 构建任务
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Fetch all history for git info
+          fetch-depth: 0 # 拉取完整历史以获取 git 信息
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -54,7 +54,7 @@ jobs:
         with:
           path: 'docs/_site'
 
-  # Deploy job
+  # 部署任务
   deploy:
     environment:
       name: github-pages
@@ -65,4 +65,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
